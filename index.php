@@ -20,11 +20,11 @@
         $l4 = $_POST['letra4'];
         $l5 = $_POST['letra5'];
 
-        $palabra = $l1.$l2.$l3.$l4.$l5;
+        $palabra = $l1.$l2.$l3.$l4.$l5; //Montamos la palabra
         
         $funciones->renovarIntentos();
         $funciones->agregarPalabra($palabra);
-        $tablaResultados = $funciones->pintarPalabra($l1,$l2,$l3,$l4,$l5);
+        header('location:index.php');//Para recargar las cookies y el método de entrada
     }
 ?>
     <div id=palabra>
@@ -39,8 +39,18 @@
             <input type="text" maxlength="1" minlength="1" name="letra5" required>
             <br>
             <?php 
-                //Al sexto intento deshabilitaremos el boton hasta el próximo día
-                if(empty($_COOKIE['intentos']) || $_COOKIE['intentos']<4){
+                //Cada vez que se recargue la pagina comprobaremos si ya ha acertado la palabra del día, de ser así no le dejamos seguir jugando
+                if(!empty($_COOKIE['palabras'])){
+                    foreach($_COOKIE['palabras'] as $clave=>$valor){
+                        $contador = $funciones->pintarPalabra($valor)['contador'];
+                        if($contador == 5){
+                            $terminado = true;
+                        }
+                    }
+                }
+
+                //Al sexto intento deshabilitaremos el boton hasta el próximo día o en caso de haber terminado
+                if((empty($_COOKIE['intentos']) || $_COOKIE['intentos']<6) && empty($terminado)){
                     echo '<input type="submit" name=bton value=Validar class=buttonS>';
                 }else{
                     echo '<input type="submit" name=bton value="Se acabó" class=buttonD disabled>';
@@ -51,10 +61,15 @@
     </div>
     <div id=resultado>
         <?php
-        if(!empty($tablaResultados)){
-            echo $tablaResultados;
-            echo $palabra;
-        }
+            if(!empty($_COOKIE['palabras'])){
+                echo "<table border=1>
+                        <tbody>";
+                foreach($_COOKIE['palabras'] as $clave=>$valor){
+                    echo $funciones->pintarPalabra($valor)['respuesta'];
+                }
+                echo "  </tbody>
+                    </table>"; 
+            }
             
         ?>
     </div>
