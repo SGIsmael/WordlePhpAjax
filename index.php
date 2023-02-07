@@ -5,12 +5,13 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Wordle mundial</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
-    <script src='main.js'></script>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/estilos.css'>
+    <script src="ajax/ajaxScript.js"></script>
 </head>
 <body>
 <?php
-    include('funciones.php');
+    include('clases/funciones.php');
+
     $funciones = new funciones(); // Creamos un objeto de la clase funciones
     if(isset($_POST['bton'])){ //Si se pulsa el botón, comenzamos el programa
         //Recogemos cada letra
@@ -21,7 +22,6 @@
         $l5 = $_POST['letra5'];
 
         $palabra = $l1.$l2.$l3.$l4.$l5; //Montamos la palabra
-        
         $funciones->renovarIntentos();
         $funciones->agregarPalabra($palabra);
         header('location:index.php');//Para recargar las cookies y el método de entrada
@@ -54,6 +54,11 @@
                     echo '<input type="submit" name=bton value=Validar class=buttonS>';
                 }else{
                     echo '<input type="submit" name=bton value="Se acabó" class=buttonD disabled>';
+                    //De este modo, solo entraremos una vez por día
+                    if(!isset($_COOKIE['estadisticas'][date('Y-m-d')])){
+                        $funciones->registrarResultadoCookies($terminado);
+                    }
+
                 }
             ?>
         </form>
@@ -74,7 +79,11 @@
         ?>
     </div>
     <div id=estadisticasPersonales>
-
+        <?php
+            if(isset($_COOKIE['estadisticas'])){
+                echo $funciones->mostrarEstadisticasPersonales();
+            }
+        ?>
     </div>
     <div id=estadisticasGlobales>
 
