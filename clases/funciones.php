@@ -110,7 +110,7 @@
         function mostrarEstadisticasPersonales(){
             //Array para guardar el número de aciertos
             $arrayAciertos = array(1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,0=>0);
-            $respuesta = "<h1>Tu tabla</h1>
+            $respuesta = "<h1>Tus estadísticas</h1>
                         <table border=1px>
                             <thead>
                                 <tr>
