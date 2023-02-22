@@ -26,12 +26,15 @@
         if($intento == 0){
             $intento = "Incompleto";
         }
-        $porcentaje = ($cuantos*100)/$total;//Calculamos porcentaje para pintar la barrita
-        $respuesta.="<tr>
-                        <td>".$intento."</td>
-                        <td><div style=width:".($porcentaje*3+30)."px; class=porcentajes>".$cuantos."<div></td>
-                    </tr>";
+        if($total != 0){
+            $porcentaje = ($cuantos*100)/$total;//Calculamos porcentaje para pintar la barrita
+            $respuesta.="<tr>
+                            <td>".$intento."</td>
+                            <td><div style=width:".($porcentaje*3+30)."px; class=porcentajes>".$cuantos."<div></td>
+                        </tr>";
+            }
         }
+        
     $respuesta.="</tbody>
                     </table>";
     echo $respuesta;
